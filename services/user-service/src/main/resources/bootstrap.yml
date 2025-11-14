@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: user-service # This must match the config file name
+  cloud:
+    config:
+      # Get the config server URL from the environment variable
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
+      fail-fast: true # Fail on startup if config server is down

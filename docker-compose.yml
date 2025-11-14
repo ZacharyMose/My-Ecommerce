@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # --- DATABASE ---
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-net
+
+  # --- SPRING CLOUD INFRASTRUCTURE ---
+  config-server:
+    build: ./infrastructure/config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+    networks:
+      - ecommerce-net
+
+  eureka-server:
+    build: ./infrastructure/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      # Tells Eureka where the Config Server is
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-server
+    networks:
+      - ecommerce-net
+
+  # --- YOUR USER SERVICE ---
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    ports:
+      - "8081:8081" # Expose user-service directly for testing
+    environment:
+      # --- Spring Cloud (points to containers by name) ---
+      - CONFIG_SERVER_URL=http://config-server:8888
+      - EUREKA_URL=http://eureka-server:8761/eureka
+      # --- Database (read from .env file) ---
+      - DB_HOST=postgres-db
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSWORD}
+      # --- Security (read from .env file) ---
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    depends_on:
+      - postgres-db
+      - config-server
+      - eureka-server
+    networks:
+      - ecommerce-net
+
+volumes:
+  postgres-data:
+
+networks:
+  ecommerce-net:
+    driver: bridge
