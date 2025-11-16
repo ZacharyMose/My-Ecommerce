@@ -18,7 +18,9 @@ services:
 
   # --- SPRING CLOUD INFRASTRUCTURE ---
   config-server:
-    build: ./infrastructure/config-server
+    build:
+      context: .  # <-- Use the root folder as the build context
+      dockerfile: infrastructure/config-server/Dockerfile # <-- Point to the Dockerfile
     container_name: config-server
     ports:
       - "8888:8888"
@@ -28,7 +30,9 @@ services:
       - ecommerce-net
 
   eureka-server:
-    build: ./infrastructure/eureka-server
+    build:
+      context: .
+      dockerfile: infrastructure/eureka-server/Dockerfile
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -42,7 +46,9 @@ services:
 
   # --- YOUR USER SERVICE ---
   user-service:
-    build: ./services/user-service
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
     container_name: user-service
     ports:
       - "8081:8081" # Expose user-service directly for testing
