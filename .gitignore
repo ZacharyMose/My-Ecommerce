@@ -74,3 +74,23 @@ desktop.ini
 
 # Environment variables file (DO NOT COMMIT THIS)
 .env
+
+# ===================================================================
+# Microservices / Docker Additions
+# ===================================================================
+
+# Docker local data
+docker-data/
+docker-compose.override.yml
+
+# Database volumes
+postgres-data/
+db-data/
+
+# Multi-module Spring Boot targets
+services/*/target/
+infrastructure/*/target/
+
+# Node / Angular (future frontend)
+node_modules/
+dist/

@@ -19,8 +19,8 @@ services:
   # --- SPRING CLOUD INFRASTRUCTURE ---
   config-server:
     build:
-      context: .  # <-- Use the root folder as the build context
-      dockerfile: infrastructure/config-server/Dockerfile # <-- Point to the Dockerfile
+      context: .
+      dockerfile: infrastructure/config-server/Dockerfile
     container_name: config-server
     ports:
       - "8888:8888"
@@ -37,31 +37,26 @@ services:
     ports:
       - "8761:8761"
     environment:
-      # Tells Eureka where the Config Server is
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
     depends_on:
       - config-server
     networks:
       - ecommerce-net
 
-  # --- YOUR USER SERVICE ---
   user-service:
     build:
       context: .
       dockerfile: services/user-service/Dockerfile
     container_name: user-service
     ports:
-      - "8081:8081" # Expose user-service directly for testing
+      - "8081:8081"
     environment:
-      # --- Spring Cloud (points to containers by name) ---
       - CONFIG_SERVER_URL=http://config-server:8888
       - EUREKA_URL=http://eureka-server:8761/eureka
-      # --- Database (read from .env file) ---
       - DB_HOST=postgres-db
       - DB_NAME=${POSTGRES_DB}
       - DB_USER=${POSTGRES_USER}
       - DB_PASS=${POSTGRES_PASSWORD}
-      # --- Security (read from .env file) ---
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
       - postgres-db
