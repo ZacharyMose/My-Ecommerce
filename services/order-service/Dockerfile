@@ -1,21 +1,21 @@
-# Stage 1: Build
+#Build
 FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-# Copy only the microservice
+#copy only the microservice
 COPY pom.xml .
 COPY src ./src
 
-# Build the service
+#Build the service
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run
+#Run
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copy built JAR file
+#copy built jar file
 COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8082
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
