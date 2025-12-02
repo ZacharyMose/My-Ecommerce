@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -32,13 +32,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}/addresses")
-    @PreAuthorize("hasRole('ADMIN') or @userService.isUserOwner(authentication, #id)")
     public ResponseEntity<List<AddressDto>> getUserAddresses(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserAddresses(id));
     }
 
     @PostMapping("/{id}/addresses")
-    @PreAuthorize("hasRole('ADMIN') or @userService.isUserOwner(authentication, #id)")
     public ResponseEntity<AddressDto> addAddress(@PathVariable UUID id, @RequestBody AddressDto addressDto) {
         return new ResponseEntity<>(userService.addAddress(id, addressDto), HttpStatus.CREATED);
     }

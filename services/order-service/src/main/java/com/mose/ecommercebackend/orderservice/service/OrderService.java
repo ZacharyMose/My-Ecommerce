@@ -23,17 +23,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
-    private final RestClient restClient = RestClient.create();
 
     @Transactional
     public String placeOrder(OrderRequest orderRequest) {
-        // Call User Service using internal Docker DNS name and port 8080
-        String userUrl = "http://user-service:8080/users/" + orderRequest.getUserId();
-        try {
-            restClient.get().uri(userUrl).retrieve().toBodilessEntity();
-        } catch (Exception e) {
-            throw new RuntimeException("User validation failed");
-        }
 
         List<OrderItem> items = orderRequest.getItems().stream()
                 .map(dto -> OrderItem.builder()

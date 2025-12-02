@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
+
     private UUID userId;
     private List<OrderItemDTO> items;
 }

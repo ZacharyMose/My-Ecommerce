@@ -15,8 +15,8 @@ import java.util.UUID;
 @Builder
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String sku;
     private BigDecimal price;
     private Integer quantity;

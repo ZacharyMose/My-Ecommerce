@@ -67,7 +67,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_CUSTOMER")
+    @WithMockUser(roles = "CUSTOMER")
     void testGetUserAddresses() throws Exception {
         UUID userId = UUID.randomUUID();
         AddressDto addressDto = new AddressDto(UUID.randomUUID(), "123 Main St", "Anytown", "12345", "USA");
@@ -83,7 +83,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ROLE_CUSTOMER")
+    @WithMockUser(roles = "CUSTOMER")
     void testAddAddress() throws Exception {
         UUID userId = UUID.randomUUID();
         AddressDto addressDto = new AddressDto(UUID.randomUUID(), "123 Main St", "Anytown", "12345", "USA");
