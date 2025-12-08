@@ -20,7 +20,7 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: "postgres"
+              value: postgres
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:

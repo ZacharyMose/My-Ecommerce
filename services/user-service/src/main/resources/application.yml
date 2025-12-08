@@ -2,9 +2,8 @@ spring:
   application:
     name: user-service
 
-  # Datasource is at the same level as 'application', NOT inside it
   datasource:
-    url: jdbc:postgresql://${DB_HOST:postgres-db}:5432/${DB_NAME:ecommerce_db}
+    url: jdbc:postgresql://${DB_HOST:postgres}:5432/${DB_NAME:ecommerce_db}
     username: ${DB_USER}
     password: ${DB_PASS}
     driver-class-name: org.postgresql.Driver
@@ -16,7 +15,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-# JWT Configuration
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   expiration-ms: 86400000

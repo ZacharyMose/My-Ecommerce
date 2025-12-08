@@ -20,21 +20,21 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: postgres
+              value: "postgres"
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  key: POSTGRES_DB
                   name: ecommerce-secrets
+                  key: POSTGRES_DB
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  key: POSTGRES_USER
                   name: ecommerce-secrets
+                  key: POSTGRES_USER
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  key: POSTGRES_PASSWORD
                   name: ecommerce-secrets
-            - name: KAFKA_BROKER
-              value: "localhost:9092"
+                  key: POSTGRES_PASSWORD
+            - name: USER_SERVICE_URL
+              value: "http://user-service:8080/api/v1/users"
