@@ -24,14 +24,11 @@ public class OrderService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${USER_SERVICE_URL:}")
-    String userServiceUrl;
-
     @Transactional
     public String placeOrder(OrderRequest orderRequest) {
 
         // Step 1: Validate user exists by calling user-service
-        String userUrl = userServiceUrl + "/" + orderRequest.getUserId();
+        String userUrl =  "http://user-service:8080/api/v1/users/"+ orderRequest.getUserId();
         ResponseEntity<?> response;
         try {
             response = restTemplate.getForEntity(userUrl, Object.class);
