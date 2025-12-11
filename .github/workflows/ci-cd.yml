@@ -52,3 +52,42 @@ jobs:
           docker tag @DOCKER_USER/order-service:latest $DOCKER_USER/order-service:${VERSION}
           docker push $DOCKER_USER/order-service:latest
           docker push $DOCKER_USER/order-service:${VERSION}
+
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-22.04
+    needs: build-and-push
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+
+      - name: Deploy to cluster
+        run: |
+          kubectl apply -f K8s/order-service/deployment.yaml
+          kubectl apply -f K8s/order-service/service.yaml
+          kubectl apply -f K8s/user-service/deployment.yaml
+          kubectl apply -f K8s/user-service/service.yaml
+          kubectl apply -f K8s/postgres/postgres.yaml
+          kubectl apply -f K8s/namespace.yaml
+          kubectl apply -f K8s/secrets.yaml
+          kubectl apply -f K8s/ingress/ingress.yaml
+
+      - name: Restart Deployment (Pull a new image)
+        run: |
+          kubectl rollout restart deployment order-service -n ecommerce
+          kubectl rollout restart deployment user-service-n ecommerce
+          
+
+
+
