@@ -34,15 +34,15 @@ jobs:
         run: | 
           cd services/user-service
           mvn -B package --file pom.xml -DskipTests
-          docker build -t $DOCKER_USER/user-service:latest .  # <--- FIXED: Added "." at the end
-          docker tag $DOCKER_USER/user-service:latest $DOCKER_USER/user-service:$VERSION # <--- FIXED: Removed typo "@"
+          docker build -t $DOCKER_USER/user-service:latest . 
+          docker tag $DOCKER_USER/user-service:latest $DOCKER_USER/user-service:$VERSION 
           docker push $DOCKER_USER/user-service:latest
           docker push $DOCKER_USER/user-service:$VERSION
 
       # --- BUILD ORDER SERVICE ---
       - name: Build & Push order-service
         run: |  
-          cd services/order-service  # <--- FIXED: Was incorrectly pointing to "user-service"
+          cd services/order-service 
           mvn -B package --file pom.xml -DskipTests
           docker build -t $DOCKER_USER/order-service:latest .
           docker tag $DOCKER_USER/order-service:latest $DOCKER_USER/order-service:$VERSION
@@ -52,7 +52,7 @@ jobs:
       # --- BUILD PRODUCT SERVICE (Added for completeness based on our chat) ---
       - name: Build & Push product-service
         run: |
-          cd services/product-service
+          cd product-service
           mvn -B package --file pom.xml -DskipTests
           docker build -t $DOCKER_USER/product-service:latest .
           docker push $DOCKER_USER/product-service:latest
@@ -79,14 +79,9 @@ jobs:
 
       - name: Deploy to cluster
         run: |
-          # 1. Namespace must exist first!
           kubectl apply -f K8s/namespace.yaml || true
-          
-          # 2. Secrets & Configs
           kubectl apply -f K8s/secrets.yaml
           kubectl apply -f K8s/postgres/postgres.yaml
-          
-          # 3. Services (Order matters less here, but good to group)
           kubectl apply -f K8s/user-service/service.yaml
           kubectl apply -f K8s/user-service/deployment.yaml
           
@@ -98,5 +93,5 @@ jobs:
       - name: Restart Deployments
         run: |
           kubectl rollout restart deployment order-service -n ecommerce
-          kubectl rollout restart deployment user-service -n ecommerce # <--- FIXED: Added missing space
+          kubectl rollout restart deployment user-service -n ecommerce 
           kubectl rollout restart deployment product-service -n ecommerce
