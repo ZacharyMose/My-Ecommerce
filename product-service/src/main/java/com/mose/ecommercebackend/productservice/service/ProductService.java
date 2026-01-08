@@ -67,4 +67,8 @@ public class ProductService {
         return mapToResponse(product);
 
     }
+
+    public void createCategory(String name){
+        categoryRepository.save(Category.builder().name(name).build());
+    }
 }

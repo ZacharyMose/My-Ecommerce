@@ -1,26 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: order-service
   namespace: ecommerce
+  name: product-service
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: order-service
+      app: product-service
   template:
     metadata:
       labels:
-        app: order-service
+        app: product-service
     spec:
       containers:
-        - name: order-service
-          image: mosezac/order-service:latest
+        - name: product-service
+          image: mosezac/product-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: postgres
+              value: "postgres"
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -36,5 +37,4 @@ spec:
                 secretKeyRef:
                   name: ecommerce-secrets
                   key: POSTGRES_PASSWORD
-            - name: USER_SERVICE_URL
-              value: "http://user-service:8080/api/v1/users"
+

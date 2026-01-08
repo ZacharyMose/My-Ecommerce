@@ -7,7 +7,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the service
-RUN mvn clean package -Dskiptests
+RUN mvn clean package -DskipTests
 
 # Run
 from eclipse-temurin:21-jre
@@ -17,4 +17,4 @@ WORKDIR /app
 copy --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8083
-ENTRYPOINT["java","jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

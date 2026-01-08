@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   # --- DATABASE ---
-  postgres-db:
+  postgres-database:
     image: postgres:15
-    container_name: postgres-db
+    container_name: postgres-database
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -38,7 +38,7 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     depends_on:
-      postgres-db:
+      postgres-database:
         condition: service_healthy
     networks:
       - ecommerce-net
@@ -57,13 +57,28 @@ services:
       - DB_USER=${POSTGRES_USER}
       - DB_PASS=${POSTGRES_PASSWORD}
     depends_on:
-      postgres-db:
-        condition: service_healthy
-      kafka:
+      postgres-database:
         condition: service_healthy
     networks:
       - ecommerce-net
 
+  product-service:
+    build:
+      context: product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "8083:8080" # Host 8083 -> container 8083
+    environment:
+      - DB_HOST=postres-db
+      - DB_NAME=${POSTGRES_DB}
+      - DB-USER=${POSTGRES_USER}
+      - DB_PASS=${POSTGRES_PASSOWRD}
+    depends_on:
+      postgres-database:
+        condition: service_healthy
+    networks:
+      - ecommerce-net
 volumes:
   postgres-data:
   kafka_data:
