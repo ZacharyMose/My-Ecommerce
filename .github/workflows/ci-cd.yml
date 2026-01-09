@@ -71,11 +71,11 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Configure kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
+      - name: Set Kubernetes context
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Deploy to cluster
         run: |
