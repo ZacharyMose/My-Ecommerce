@@ -49,7 +49,7 @@ jobs:
           docker push $DOCKER_USER/order-service:latest
           docker push $DOCKER_USER/order-service:$VERSION
 
-      # --- BUILD PRODUCT SERVICE (Added for completeness based on our chat) ---
+      # --- BUILD PRODUCT SERVICE
       - name: Build & Push product-service
         run: |
           cd product-service
