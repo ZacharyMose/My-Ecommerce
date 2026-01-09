@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     env:
       DOCKER_USER: mosezac
       VERSION: v1.0.0
@@ -59,7 +59,7 @@ jobs:
 
   deploy:
     name: Deploy to Kubernetes
-    runs-on: ubuntu-22.04
+    runs-on: self-hosted
     needs: build-and-push
 
     steps:
