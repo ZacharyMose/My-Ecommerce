@@ -87,8 +87,10 @@ jobs:
           
           kubectl apply -f K8s/order-service/service.yaml
           kubectl apply -f K8s/order-service/deployment.yaml
-
-          kubectl apply -f K8s/product-service.yaml
+          
+          kubectl apply -f K8s/product-service/service.yaml
+          kubectl apply -f K8s/product-service/deployment.yaml
+          
 
       - name: Restart Deployments
         run: |
